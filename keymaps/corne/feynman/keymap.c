@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define _BASE 0
 #define _NUM 1
-#define _VIM 2
+#define _POWER 2
 #define _MEDIA 3
 
 bool ANIM_START = false;
@@ -50,18 +50,6 @@ tap_dance_action_t tap_dance_actions[] = {
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-//     [_BASE] = LAYOUT_split_3x6_3
-//   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-// (LGUI(KC_SPC),    KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                         KC_J,    KC_L,    KC_U,    KC_Y, KC_SCLN, TG(_MEDIA),
-//   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-// TD(TD_SHIFT_CAPS),KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                         KC_H,    KC_N,    KC_E,    KC_I,    KC_O, KC_QUOT,
-//   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-//        KC_TAB,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_K,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, KC_LBRC,
-//   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-//                                            KC_SPC, KC_LGUI,MO(_NUM),   TG(_VIM),  KC_ENT, KC_BSPC
-//                                       //`--------------------------'  `--------------------------'
-//     ),
-
     [_BASE] = LAYOUT_split_3x6_3
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
 (LGUI(KC_SPC),    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,TG(_MEDIA),
@@ -70,7 +58,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
 TD(TD_SHIFT_CAPS),KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, KC_LBRC,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                           KC_SPC, KC_LGUI,MO(_NUM),   TG(_VIM),  KC_ENT, KC_BSPC
+                                           KC_SPC, KC_LGUI,MO(_NUM),   TG(_POWER),  KC_ENT, KC_BSPC
                                       //`--------------------------'  `--------------------------'
     ),
 
@@ -86,17 +74,29 @@ TD(TD_SHIFT_CAPS),XXXXXXX,XXXXXXX,XXXXXXX,LGUI(KC_V),LGUI(KC_C),                
                                       //`--------------------------'  `--------------------------'
     ),
 
-    [_VIM] = LAYOUT_split_3x6_3(
+    [_POWER] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-       KC_ESC, KC_ACL0, KC_ACL1, KC_ACL2, XXXXXXX,    KC_I,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      XXXXXXX, XXXXXXX,KC_MS_LEFT,KC_MS_UP,KC_MS_RIGHT,XXXXXXX,                  XXXXXXX,    KC_H,    KC_K,    KC_L, XXXXXXX, XXXXXXX,
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      XXXXXXX, XXXXXXX, XXXXXXX,KC_MS_DOWN,XXXXXXX,XXXXXXX,                     XXXXXXX, XXXXXXX,    KC_J, XXXXXXX, XXXXXXX, XXXXXXX,
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI, _______,  KC_SPC,  TG(_VIM), KC_BTN1, KC_BTN2
+                                         LGUI(KC_SPC),LOPT(KC_LEFT_GUI),XXXXXXX,TG(_POWER),XXXXXXX,XXXXXXX
                                       //`--------------------------'  `--------------------------'
     ),
+
+//     [_VIM] = LAYOUT_split_3x6_3(
+//   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+//        KC_ESC, KC_ACL0, KC_ACL1, KC_ACL2, XXXXXXX,    KC_I,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+//   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+//       XXXXXXX, XXXXXXX,KC_MS_LEFT,KC_MS_UP,KC_MS_RIGHT,XXXXXXX,                  XXXXXXX,    KC_H,    KC_K,    KC_L, XXXXXXX, XXXXXXX,
+//   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+//       XXXXXXX, XXXXXXX, XXXXXXX,KC_MS_DOWN,XXXXXXX,XXXXXXX,                     XXXXXXX, XXXXXXX,    KC_J, XXXXXXX, XXXXXXX, XXXXXXX,
+//   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+//                                           KC_LGUI, _______,  KC_SPC,  TG(_VIM), KC_BTN1, KC_BTN2
+//                                       //`--------------------------'  `--------------------------'
+//     ),
 
     [_MEDIA] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
@@ -142,8 +142,8 @@ bool oled_task_user(void) {
             rgb_matrix_mode_noeeprom(RGB_MATRIX_ALPHAS_MODS);
             rgb_matrix_sethsv_noeeprom(HSV_YELLOW);
             break;
-        case _VIM:
-            write_oled("VIM");
+        case _POWER:
+            write_oled("POWER");
             rgb_matrix_mode_noeeprom(RGB_MATRIX_ALPHAS_MODS);
             rgb_matrix_sethsv_noeeprom(HSV_TEAL);
             break;
@@ -165,7 +165,7 @@ bool oled_task_user(void) {
         oled_clear();
         oled_write_P(PSTR("CMD"), false);
     }
-    
+
     return false;
 }
 #endif
