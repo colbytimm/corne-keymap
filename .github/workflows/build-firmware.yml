@@ -1,10 +1,7 @@
-name: Build my QMK configuration
+name: Build QMK Firmware
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
@@ -12,30 +9,17 @@ jobs:
   build-qmk:
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: write
-
     steps:
       - uses: actions/checkout@v4
+
+      - uses: d3adb5/build-qmk-fw@v1
         with:
-          ref: ${{ github.head_ref }}
+          keyboard: crkbd/rev1
+          keymap: feynman
+          controller: helios
+          local-keymap-path: keymaps/corne/feynman
 
-      - name: Draw Keymap
-        uses: ./.github/actions/keymap-drawer
-
-      - name: Commit Keymap Config and Keymap Draw
-        uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: actions/upload-artifact@v4
         with:
-          commit_message: Update keymap config and keymap draw
-
-      # - uses: d3adb5/build-qmk-fw@v1
-      #   with:
-      #     keyboard: crkbd/rev1
-      #     keymap: feynman
-      #     controller: helios
-      #     local-keymap-path: keymaps/corne/feynman
-
-      # - uses: actions/upload-artifact@v4
-      #   with:
-      #     name: built-images
-      #     path: qmk-output
+          name: built-images
+          path: qmk-output
