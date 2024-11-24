@@ -12,14 +12,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: d3adb5/build-qmk-fw@v1
+      - name: Build QMK Firmware
+        uses: d3adb5/build-qmk-fw@v1
         with:
           keyboard: crkbd/rev1
           keymap: feynman
           controller: helios
           local-keymap-path: keymaps/corne/feynman
 
-      - uses: actions/upload-artifact@v4
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
         with:
-          name: built-images
-          path: qmk-output
+          tag_name: "@latest"
+          release_name: "Release @latest"
+          draft: false
+          prerelease: false
+
+      - name: Release Built Image
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_name: built-image
+          asset_path: qmk-output
+          asset_content_type: application/zip
