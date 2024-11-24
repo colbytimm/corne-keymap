@@ -1,0 +1,25 @@
+name: Draw Keymap
+description: "Composite action for keymap drawer."
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Set up python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.11
+
+    - name: Install keymap-drawer and qmk
+      run: pip install keymap-drawer qmk
+      shell: bash
+
+    - name: Create Keymap Configuration
+      run: |
+        qmk c2json --keyboard crkbd/rev1 --keymap feynman ./keymaps/corne/feynman/keymap.c --no-cpp | keymap parse -c 10 -q - >config/corne_keymap.yml
+      shell: bash
+
+    - name: Draw Keymap
+      run: |
+        keymap draw ./config/corne_keymap.yml >imgs/corne_keymap.svg
+      shell: bash
