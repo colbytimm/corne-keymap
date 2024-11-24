@@ -14,6 +14,11 @@ runs:
       run: pip install keymap-drawer qmk
       shell: bash
 
+    - name: Set up QMK
+      run: |
+        qmk setup -y
+      shell: bash
+
     - name: Create Keymap Configuration
       run: |
         qmk c2json --keyboard crkbd/rev1 --keymap feynman ./keymaps/corne/feynman/keymap.c --no-cpp | keymap parse -c 10 -q - >config/corne_keymap.yml
