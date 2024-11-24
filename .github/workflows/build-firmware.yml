@@ -18,6 +18,9 @@ jobs:
       - name: Draw Keymap
         uses: ./.github/actions/keymap-drawer
 
+      - name: Commit Keymap Config and Keymap Draw
+        uses: stefanzweifel/git-auto-commit-action@v5
+
       # - uses: d3adb5/build-qmk-fw@v1
       #   with:
       #     keyboard: crkbd/rev1

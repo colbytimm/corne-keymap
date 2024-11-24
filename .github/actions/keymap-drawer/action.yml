@@ -22,18 +22,9 @@ runs:
     - name: Create Keymap Configuration
       run: |
         qmk c2json --keyboard crkbd/rev1 --keymap feynman ./keymaps/corne/feynman/keymap.c --no-cpp | keymap parse -c 10 -q - >config/corne_keymap.yml
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add config/corne_keymap.yml
-        git commit -m "Update corne_keymap.yml"
       shell: bash
 
     - name: Draw Keymap
       run: |
         keymap draw ./config/corne_keymap.yml >imgs/corne_keymap.svg
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add imgs/corne_keymap.svg
-        git commit -m "Update corne_keymap.svg"
-        git push
       shell: bash
