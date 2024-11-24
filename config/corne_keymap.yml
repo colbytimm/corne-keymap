@@ -4,7 +4,7 @@ layers:
   - [Gui+ SPC, Q, W, E, R, T, Y, U, I, O]
   - [P, TG( MEDIA), TAB, A, S, D, F, G, H, J]
   - [K, L, ;, '''', TD(TD SHIFT CAPS), Z, X, C, V, B]
-  - [N, M, ',', ., /, '[', SPC, LGUI, MO( NUM), TG( VIM)]
+  - [N, M, ',', ., /, '[', SPC, LGUI, MO( NUM), TG( POWER)]
   - [ENT, BSPC]
   L1:
   - [ESC, '1', '2', '3', '4', '5', '6', '7', '8', '9']
@@ -13,20 +13,11 @@ layers:
   - ['', '', DOWN, '', '', '', Ctl+ LOPT, LGUI, '', LCTL]
   - [ENT, LOPT]
   L2:
-  - [ESC, ACL0, ACL1, ACL2, '', I, '', '', '', '']
-  - ['', '', '', '', MS LEFT, MS UP, MS RIGHT, '', '', H]
-  - [K, L, '', '', '', '', '', MS DOWN, '', '']
-  - - ''
-    - ''
-    - J
-    - ''
-    - ''
-    - ''
-    - LGUI
-    - {t: ▽, type: trans}
-    - SPC
-    - TG( VIM)
-  - [BTN1, BTN2]
+  - ['', '', '', '', '', '', '', '', '', '']
+  - ['', '', '', '', '', '', '', '', '', '']
+  - ['', '', '', '', '', '', '', '', '', '']
+  - ['', '', '', '', '', '', Gui+ SPC, Alt+ LEFT GUI, '', TG( POWER)]
+  - ['', '']
   L3:
   - [Alt+ SPC, '', '', '', '', '', '', '', '', '']
   - ['', TG( MEDIA), '', MPRV, MPLY, MNXT, '', VOLU, '', '']
