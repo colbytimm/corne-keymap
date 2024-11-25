@@ -20,19 +20,7 @@ jobs:
           controller: helios
           local-keymap-path: keymaps/corne/feynman
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - uses: actions/upload-artifact@v4
         with:
-          tag_name: "@latest"
-          release_name: "Release @latest"
-          draft: false
-          prerelease: false
-
-      - name: Release Built Image
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_name: built-image
-          asset_path: qmk-output
-          asset_content_type: application/zip
+          name: built-images
+          path: qmk-output
