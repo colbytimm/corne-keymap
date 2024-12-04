@@ -6,8 +6,7 @@
 This repository stores my keymap file for my Corne Cherry v3 keyboard and builds my firmware.
 
 <p align="center">
-    <img src="./imgs/corne_left.png" width="45%" style="margin-right: 10px;" />
-    <img src="./imgs/corne_right.png" width="45%" style="margin-left: 10px;" />
+    <img src="./imgs/corne_photo.png" width="90%" />
 </p>
 
 ## Design
