@@ -3,8 +3,11 @@
 </p>
 
 # Corne Cherry v3 Keymap
-
 This repository stores my keymap file for my Corne Cherry v3 keyboard and builds my firmware.
+
+<p align="center">
+    <img src="./imgs/corne_photo.png" width="90%" />
+</p>
 
 ## Design
 - Keyboard Design

@@ -290,37 +290,3 @@ static void oled_render_cat(void) {
         current_frame = (current_frame + 1) % 2;
     }
 }
-
-// static void oled_render_(void) {
-//     static const char ANIM_FRAME1 [] PROGMEM = {
-        
-//     };
-
-//     static const char ANIM_FRAME2 [] PROGMEM = {
-        
-//     };
-
-//     static const char ANIM_FRAME3 [] PROGMEM = {
-        
-//     };
-
-//     static const char ANIM_FRAME4 [] PROGMEM = {
-        
-//     };
-
-//     static const char ANIM_FRAME5 [] PROGMEM = {
-        
-//     };
-
-//     static const char* TYPE_FRAMES [] = {ANIM_FRAME1, ANIM_FRAME2, ANIM_FRAME3, ANIM_FRAME4, ANIM_FRAME5};
-
-//     static uint32_t anim_timer = 0;
-//     static uint8_t current_frame = 0;
-
-//     if (timer_elapsed32(anim_timer) > ANIM_FRAME) {
-//         anim_timer = timer_read32();
-//         const char* frame = TYPE_FRAMES[current_frame];
-//         oled_write_raw_P(frame, ANIM_SIZE);
-//         current_frame = (current_frame + 1) % 5;
-//     }
-// }

@@ -49,6 +49,7 @@ tap_dance_action_t tap_dance_actions[] = {
     [TD_SHIFT_CAPS] = ACTION_TAP_DANCE_DOUBLE(KC_LSFT, KC_CAPS),
 };
 
+// Keycode reference: https://docs.qmk.fm/keycodes
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT_split_3x6_3
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
@@ -76,11 +77,11 @@ TD(TD_SHIFT_CAPS),XXXXXXX,XXXXXXX,XXXXXXX,LGUI(KC_V),LGUI(KC_C),                
 
     [_POWER] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, MS_BTN1, MS_BTN2, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, MS_LEFT, MS_UP, MS_RGHT, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+      XXXXXXX, XXXXXXX, XXXXXXX, LCTL(KC_C), XXXXXXX,LGUI(LSFT(KC_SPC)),         XXXXXXX,  XXXXXXX, MS_DOWN, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                          LGUI(KC_SPC),LOPT(KC_LEFT_GUI),XXXXXXX,TG(_POWER),XXXXXXX,XXXXXXX
                                       //`--------------------------'  `--------------------------'
@@ -102,7 +103,7 @@ TD(TD_SHIFT_CAPS),XXXXXXX,XXXXXXX,XXXXXXX,LGUI(KC_V),LGUI(KC_C),                
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
  LOPT(KC_SPC), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,TG(_MEDIA),
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX, KC_VOLU,                      XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,XXXXXXX, XXXXXXX,
+      XXXXXXX, XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT, KC_VOLU,                      XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
 TD(TD_SHIFT_CAPS),XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX, KC_VOLD,                     XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, KC_BSLS, KC_RBRC,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
@@ -133,12 +134,12 @@ bool oled_task_user(void) {
 
     switch (get_highest_layer(layer_state)) {
         case _BASE:
-            write_oled("Base");
+            write_oled("BASE");
             rgb_matrix_mode_noeeprom(RGB_MATRIX_ALPHAS_MODS);
             rgb_matrix_sethsv_noeeprom(HSV_PURPLE);
             break;
         case _NUM:
-            write_oled("Numbers");
+            write_oled("NUM");
             rgb_matrix_mode_noeeprom(RGB_MATRIX_ALPHAS_MODS);
             rgb_matrix_sethsv_noeeprom(HSV_YELLOW);
             break;
@@ -148,7 +149,7 @@ bool oled_task_user(void) {
             rgb_matrix_sethsv_noeeprom(HSV_TEAL);
             break;
         case _MEDIA:
-            write_oled("Media");
+            write_oled("MEDIA");
             rgb_matrix_mode_noeeprom(RGB_MATRIX_ALPHAS_MODS);
             rgb_matrix_sethsv_noeeprom(HSV_CORAL);
             break;
