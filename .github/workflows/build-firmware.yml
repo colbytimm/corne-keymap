@@ -1,9 +1,17 @@
 name: Build QMK Firmware
 
+# on:
+#   push:
+#     branches:
+#       - main
+
 on:
-  push:
+  pull_request:
     branches:
       - main
+
+permissions:
+  contents: write
 
 jobs:
   build-qmk:
@@ -24,3 +32,13 @@ jobs:
         with:
           name: built-images
           path: qmk-output
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: qmk-output/**
+          tag_name: Latest
+          name: Release latest
+          draft: false
+          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}

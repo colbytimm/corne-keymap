@@ -1,9 +1,14 @@
 name: PR Workflow
 
 on:
-  pull_request:
+  push:
     branches:
       - main
+
+# on:
+#   pull_request:
+#     branches:
+#       - main
 
 jobs:
   build-qmk:
