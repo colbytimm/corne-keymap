@@ -1,12 +1,7 @@
-name: Build QMK Firmware
-
-# on:
-#   push:
-#     branches:
-#       - main
+name: Build QMK Release Firmware
 
 on:
-  pull_request:
+  push:
     branches:
       - main
 
