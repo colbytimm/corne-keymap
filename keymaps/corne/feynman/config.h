@@ -25,11 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* Select hand configuration */
 
 #define MASTER_LEFT
-// #define MASTER_RIGHT
-// #define EE_HANDS
+#define ENABLE_COMPILE_KEYCODE
 
-//#define QUICK_TAP_TERM 0
-//#define TAPPING_TERM 100
 #ifdef RGB_MATRIX_ENABLE
 #define ENABLE_RGB_MATRIX_ALPHAS_MODS
 #endif
