@@ -3,8 +3,11 @@
 </p>
 
 # Corne Cherry v3 Keymap
-
 This repository stores my keymap file for my Corne Cherry v3 keyboard and builds my firmware.
+
+<p align="center">
+    <img src="./imgs/corne_photo.png" width="90%" />
+</p>
 
 ## Design
 - Keyboard Design
@@ -21,3 +24,11 @@ This repository stores my keymap file for my Corne Cherry v3 keyboard and builds
 ## Keymap Configuration
 
 <img src="./imgs/corne_keymap.svg" />
+
+## Run Locally
+
+To build the firmware locally, run the following:
+
+```bash
+qmk compile -c -kb crkbd/rev1 -km feynman -e CONVERT_TO=helios
+```
