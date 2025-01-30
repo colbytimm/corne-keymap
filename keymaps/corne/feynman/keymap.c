@@ -1,8 +1,9 @@
 /*
-Custom Corne Keymap - Optimized for MacOS Development
+    Colby Corne Keymap - Optimized for macOS Development
 */
 
 #include QMK_KEYBOARD_H
+#include <string.h>
 
 #define _BASE 0
 #define _NUM 1
@@ -10,12 +11,17 @@ Custom Corne Keymap - Optimized for MacOS Development
 #define _MEDIA 3
 #define _SETTINGS 4
 
-// Tap Dance declarations
+bool ANIM_START = false;
+bool ENABLE_RAINBOW = false;
+
+#ifdef OLED_ENABLE
+#include "enigma.c"
+#endif
+
 enum {
     TD_SHIFT_CAPS,
 };
 
-// Custom Keycodes
 enum custom_keycodes {
     KC_OLED_ANIM = SAFE_RANGE,
     KC_OPTION_CMD_LBRACKET,
@@ -27,7 +33,6 @@ enum custom_keycodes {
     KC_OPTION_CMD_SLSH
 };
 
-// Tap Dance definitions
 tap_dance_action_t tap_dance_actions[] = {
     [TD_SHIFT_CAPS] = ACTION_TAP_DANCE_DOUBLE(KC_LSFT, KC_CAPS),
 };
