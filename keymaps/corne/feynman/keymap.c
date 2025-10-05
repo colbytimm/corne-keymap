@@ -1,151 +1,155 @@
 /*
 Copyright 2019 @foostan
-Copyright 2020 Drashna Jaelre <@drashna>
+Copyright 2020 Drashna Jaelre
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+GPLv2 or later.
 */
 
-//qmk compile -c -kb crkbd/rev1 -km feynman -e CONVERT_TO=helios
+// qmk compile -c -kb crkbd/rev1 -km feynman -e CONVERT_TO=helios
 
 #include QMK_KEYBOARD_H
 #include <string.h>
 
-#define _BASE 0
-#define _NUM 1
-#define _POWER 2
-#define _MEDIA 3
+/* Layers: swap your old _NUM/_POWER for _NAV/_SYM to match the new flow */
+#define _BASE     0
+#define _NAV      1
+#define _SYM      2
+#define _MEDIA    3
 #define _SETTINGS 4
 
 bool ANIM_START = false;
 bool ENABLE_RAINBOW = false;
 
 #ifdef OLED_ENABLE
-#include "enigma.c"
+#include "enigma.c"   // your animation & cat renderer
 #endif
 
-// Tap Dance declarations
-enum {
-    TD_SHIFT_CAPS,
-};
+/* ───────────────── Tap Dance: keep your Shift/Caps toggle ───────────────── */
+enum { TD_SHIFT_CAPS };
 
+/* ─────────────── Custom keycodes: keep yours, add Raycast/Magnet ─────────── */
 enum custom_keycodes {
     KC_OLED_ANIM = SAFE_RANGE,
     OUTPUT_LAYOUT,
     RGB_TOG_KEY,
     KC_OPTION_CMD_LBRACKET,
-    KC_OPTION_CMD_RBRACKET, // Opt+CMD+]
-    KC_C_S_RIGHT,           // CTRL+SHIFT+Right
-    KC_CMD_SHIFT_BS,       // CMD+SHIFT+Backslash
-    KC_CMD_P,              // CMD+P
-    KC_CMD_SHIFT_P,        // CMD+SHIFT+P
-    KC_OPTION_CMD_SLSH     // OPT+CMD+/
+    KC_OPTION_CMD_RBRACKET,
+    KC_C_S_RIGHT,
+    KC_CMD_SHIFT_BS,
+    KC_CMD_P,
+    KC_CMD_SHIFT_P,
+    KC_OPTION_CMD_SLSH,
+
+    /* New: workflow macros */
+    RAYCAST,     // Cmd+Space
+    MG_LEFT,     // Ctrl+Opt+Left  (Magnet snap left)
+    MG_RIGHT,    // Ctrl+Opt+Right (Magnet snap right)
+    MG_FULL      // Ctrl+Opt+F     (Magnet full screen or your preferred bind)
 };
 
-// Tap Dance definitions
+/* Tap Dance bindings */
 tap_dance_action_t tap_dance_actions[] = {
-    // Tap once for Shift, twice for Caps Lock
     [TD_SHIFT_CAPS] = ACTION_TAP_DANCE_DOUBLE(KC_LSFT, KC_CAPS),
 };
 
-// Keycode reference: https://docs.qmk.fm/keycodes
+/* ─────────────────────────── Home-Row Mods ────────────────────────────────
+   Left:  A=Ctrl, S=Alt, D=Cmd, F=Shift
+   Right: J=Shift, K=Cmd, L=Alt, ;=Ctrl
+*/
+#define HM_A    MT(MOD_LCTL, KC_A)
+#define HM_S    MT(MOD_LALT, KC_S)
+#define HM_D    MT(MOD_LGUI, KC_D)
+#define HM_F    MT(MOD_LSFT, KC_F)
+#define HM_J    MT(MOD_RSFT, KC_J)
+#define HM_K    MT(MOD_RGUI, KC_K)
+#define HM_L    MT(MOD_RALT, KC_L)
+#define HM_SCL  MT(MOD_RCTL, KC_SCLN)
+
+/* ─────────────────────────── Thumb assignments ─────────────────────────────
+   L-inner: Space (tap) / NAV (hold)
+   L-outer: Esc (tap)   / Ctrl (hold)
+   R-inner: Enter (tap) / SYM (hold)
+   R-outer: Backspace (tap) / MEDIA (hold)
+*/
+#define TH_L_IN   LT(_NAV, KC_SPC)
+#define TH_L_OUT  MT(MOD_LCTL, KC_ESC)
+#define TH_R_IN   LT(_SYM, KC_ENT)
+#define TH_R_OUT  LT(_MEDIA, KC_BSPC)
+
+/* Mac nav helpers */
+#define W_L     LALT(KC_LEFT)
+#define W_R     LALT(KC_RGHT)
+#define L_HOME  LGUI(KC_LEFT)
+#define L_END   LGUI(KC_RGHT)
+#define DEL_W   LALT(KC_BSPC)
+#define FDEL_W  LALT(KC_DEL)
+
+/* ───────────────────────────── Keymaps ─────────────────────────────────── */
+#define LAYOUT LAYOUT_split_3x6_3
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [_BASE] = LAYOUT_split_3x6_3(
-  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-LGUI(KC_SPC),    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,TG(_MEDIA),
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-       KC_TAB,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_QUOT,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-TD(TD_SHIFT_CAPS),KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, KC_LBRC,
-  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                           KC_SPC, KC_LGUI,MO(_NUM),TG(_POWER), KC_ENT, KC_BSPC
-                                      //`--------------------------'  `--------------------------'
-    ),
 
-    [_NUM] = LAYOUT_split_3x6_3(
-  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-       KC_ESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_DEL,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-LGUI(KC_GRAVE),XXXXXXX, XXXXXXX, XXXXXXX,  KC_EQL, KC_MINS,                      XXXXXXX, KC_LEFT,   KC_UP,KC_RIGHT, XXXXXXX, XXXXXXX,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-TD(TD_SHIFT_CAPS),XXXXXXX,XXXXXXX,XXXXXXX,LGUI(KC_V),LGUI(KC_C),                 XXXXXXX, XXXXXXX, KC_DOWN, XXXXXXX, XXXXXXX, XXXXXXX,
-  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                       C(KC_LOPT), KC_LGUI, XXXXXXX,    KC_LCTL,  KC_ENT, KC_LOPT
-                                      //`--------------------------'  `--------------------------'
-    ),
+/* ─────────────── BASE (typing) ───────────────
+   Keep a couple of your base conveniences (e.g., dedicated Raycast if desired)
+*/
+[_BASE] = LAYOUT(
+/* Row1 */   RAYCAST, KC_Q,  KC_W,  KC_E,  KC_R,  KC_T,            KC_Y,   KC_U,   KC_I,   KC_O,   KC_P,   TG(_MEDIA),
+/* Row2 */   KC_TAB,  HM_A,  HM_S,  HM_D,  HM_F,  KC_G,            KC_H,   HM_J,   HM_K,   HM_L,   HM_SCL, KC_QUOT,
+/* Row3 */   TD(TD_SHIFT_CAPS), KC_Z, KC_X, KC_C, KC_V, KC_B,      KC_N,   KC_M,   KC_COMM,KC_DOT, KC_SLSH, KC_BSLS,
+/* Thumbs */                 TH_L_OUT, TH_L_IN, KC_DEL,     KC_MUTE, TH_R_IN, TH_R_OUT
+),
 
-    [_POWER] = LAYOUT_split_3x6_3(
-  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-KC_OPTION_CMD_LBRACKET,KC_OPTION_CMD_RBRACKET, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, KC_MS_BTN1, KC_MS_BTN2, XXXXXXX, XXXXXXX, LCTL(LGUI(KC_Q)),
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
- KC_C_S_RIGHT,KC_CMD_SHIFT_BS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,               XXXXXXX, KC_MS_LEFT, KC_MS_UP, KC_MS_RIGHT, XXXXXXX, XXXXXXX,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-     KC_CMD_P,KC_CMD_SHIFT_P,KC_OPTION_CMD_SLSH,LCTL(KC_C),XXXXXXX,LGUI(LSFT(KC_SPC)),XXXXXXX,XXXXXXX,KC_MS_DOWN,XXXXXXX,XXXXXXX,XXXXXXX,
-  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                         LGUI(KC_SPC),LOPT(KC_LEFT_GUI),XXXXXXX,TG(_POWER),XXXXXXX,XXXXXXX
-                                      //`--------------------------'  `--------------------------'
-    ),
+/* ─────────────── NAV (hold Space) ───────────────
+   VS Code / Warp / Arc navigation & editing, Mac primitives
+*/
+[_NAV] = LAYOUT(
+/* Row1 */   _______, _______, _______, _______, _______, _______,   _______, _______, _______, _______, _______, _______,
+/* Row2 */   L_HOME,  W_L,     RAYCAST, W_R,     L_END,   KC_LEFT,   KC_DOWN, KC_UP,   KC_RGHT, KC_PGUP, KC_PGDN, _______,
+/* Row3 */   KC_UNDO, KC_CUT,  KC_COPY, KC_PSTE, DEL_W,   KC_ESC,    FDEL_W,  KC_HOME, KC_END,  KC_TAB,  KC_LCMD, KC_RCMD,
+/* Thumbs */                 _______, _______, _______,     _______, _______, _______
+),
 
-//     [_VIM] = LAYOUT_split_3x6_3(
-//   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-//        KC_ESC, KC_ACL0, KC_ACL1, KC_ACL2, XXXXXXX,    KC_I,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-//   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-//       XXXXXXX, XXXXXXX,KC_MS_LEFT,KC_MS_UP,KC_MS_RIGHT,XXXXXXX,                  XXXXXXX,    KC_H,    KC_K,    KC_L, XXXXXXX, XXXXXXX,
-//   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-//       XXXXXXX, XXXXXXX, XXXXXXX,KC_MS_DOWN,XXXXXXX,XXXXXXX,                     XXXXXXX, XXXXXXX,    KC_J, XXXXXXX, XXXXXXX, XXXXXXX,
-//   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-//                                           KC_LGUI, _______,  KC_SPC,  TG(_VIM), KC_BTN1, KC_BTN2
-//                                       //`--------------------------'  `--------------------------'
-//     ),
+/* ─────────────── SYM / NUM (hold Enter) ───────────────
+   Dev symbols grouped by shape; numbers on bottom row for fast reach
+*/
+[_SYM] = LAYOUT(
+/* Row1 */   KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC,   KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_UNDS, KC_PLUS,
+/* Row2 */   KC_LBRC, KC_RBRC, KC_LCBR, KC_RCBR, KC_LABK, KC_RABK,   KC_EQL,  KC_MINS, KC_QUOT, KC_DQUO, KC_GRV,  KC_TILD,
+/* Row3 */   KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,      KC_7,    KC_8,    KC_9,    KC_0,    KC_SCLN, KC_SLSH,
+/* Thumbs */                 _______, _______, _______,     _______, _______, _______
+),
 
-    [_MEDIA] = LAYOUT_split_3x6_3(
-  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
- LOPT(KC_SPC), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,TG(_MEDIA),
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      XXXXXXX, XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT, KC_VOLU,                      XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,XXXXXXX, XXXXXXX,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-TD(TD_SHIFT_CAPS),XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX, KC_VOLD,                     XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, KC_BSLS, KC_RBRC,
-  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                     KC_OLED_ANIM, KC_LCTL, XXXXXXX,MO(_SETTINGS), XXXXXXX, XXXXXXX
-                                      //`--------------------------'  `--------------------------'
-    ),
+/* ─────────────── MEDIA (hold Backspace) ───────────────
+   Spotify, volume, Magnet window mgmt, plus your OLED anim toggle & settings
+*/
+[_MEDIA] = LAYOUT(
+/* Row1 */   LOPT(KC_SPC), KC_MPRV, KC_MPLY, KC_MNXT, KC__MUTE, KC_VOLU,   MG_LEFT, MG_RIGHT, MG_FULL, _______, _______, TG(_MEDIA),
+/* Row2 */   _______, _______, _______, _______, _______, KC_VOLD,          _______, _______, _______,  _______, _______, _______,
+/* Row3 */   TD(TD_SHIFT_CAPS), _______, _______, _______, _______, _______, _______, _______, _______,  _______, KC_BSLS, KC_RBRC,
+/* Thumbs */               KC_OLED_ANIM, KC_LCTL, _______,     MO(_SETTINGS), _______, _______
+),
 
-    [_SETTINGS] = LAYOUT_split_3x6_3(
-  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, RGB_TOG_KEY,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX
-                                      //`--------------------------'  `--------------------------'
-    )
+/* ─────────────── SETTINGS ───────────────
+   Keep your RGB toggle etc. (expand as you like)
+*/
+[_SETTINGS] = LAYOUT(
+/* Row1 */   _______, _______, _______, _______, _______, _______,   _______, _______, _______, _______, _______, RGB_TOG_KEY,
+/* Row2 */   _______, _______, _______, _______, _______, _______,   _______, _______, _______, _______, _______, _______,
+/* Row3 */   _______, _______, _______, _______, _______, _______,   _______, _______, _______, _______, _______, _______,
+/* Thumbs */                 _______, _______, _______,     _______, _______, _______
+)
 };
 
-void write_oled(const char* value) {
-    if (!ANIM_START) {
-        oled_write_P(PSTR(value), false);
-    }
+/* ─────────────────────────── OLED helpers ─────────────────────────────── */
+
+static inline void write_oled(const char* value) {
+    if (!ANIM_START) oled_write_P(PSTR(""), false), oled_write_P(PSTR(value), false);
 }
 
 #ifdef OLED_ENABLE
 bool oled_task_user(void) {
-    // Host Keyboard Layer Status
     if (ANIM_START) {
-        if (is_keyboard_master()) {
-            oled_render_anim();
-        }
+        if (is_keyboard_master()) { oled_render_anim(); }
     } else {
         oled_render_cat();
         oled_write_P(PSTR("Layer: "), false);
@@ -159,15 +163,15 @@ bool oled_task_user(void) {
             rgb_matrix_mode_noeeprom(RGB_MATRIX_ALPHAS_MODS);
             rgb_matrix_sethsv_noeeprom(HSV_PURPLE);
             break;
-        case _NUM:
-            write_oled("NUM");
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_ALPHAS_MODS);
-            rgb_matrix_sethsv_noeeprom(HSV_YELLOW);
-            break;
-        case _POWER:
-            write_oled("POWER");
+        case _NAV:
+            write_oled("NAV");
             rgb_matrix_mode_noeeprom(RGB_MATRIX_ALPHAS_MODS);
             rgb_matrix_sethsv_noeeprom(HSV_TEAL);
+            break;
+        case _SYM:
+            write_oled("SYM");
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_ALPHAS_MODS);
+            rgb_matrix_sethsv_noeeprom(HSV_YELLOW);
             break;
         case _MEDIA:
             write_oled("MEDIA");
@@ -184,104 +188,80 @@ bool oled_task_user(void) {
             rgb_matrix_sethsv_noeeprom(HSV_PURPLE);
             write_oled("Undefined");
     }
-    if (mods & MOD_MASK_SHIFT) {
-        oled_clear();
-        oled_write_P(PSTR("Shift"), false);
-    }
-    if (mods & MOD_MASK_GUI) {
-        oled_clear();
-        oled_write_P(PSTR("CMD"), false);
-    }
+
+    if (mods & MOD_MASK_SHIFT) { oled_clear(); oled_write_P(PSTR("Shift"), false); }
+    if (mods & MOD_MASK_GUI)   { oled_clear(); oled_write_P(PSTR("CMD"),   false); }
 
     return false;
 }
 #endif
 
+/* ───────────────────────── Macro processing ────────────────────────────── */
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+        /* your existing OLED toggle */
         case KC_OLED_ANIM:
             if (record->event.pressed) {
-                ANIM_START=!ANIM_START;
-                ENABLE_RAINBOW=!ENABLE_RAINBOW;
+                ANIM_START = !ANIM_START;
+                ENABLE_RAINBOW = !ENABLE_RAINBOW;
             } else {
                 oled_clear();
             }
             return false;
+
+        /* your existing VS Code / mac shortcuts */
         case KC_OPTION_CMD_LBRACKET:
-            if (record->event.pressed) {
-                register_code(KC_LALT);
-                register_code(KC_LGUI);
-                register_code(KC_LBRC);
-            } else {
-                unregister_code(KC_LBRC);
-                unregister_code(KC_LGUI);
-                unregister_code(KC_LALT);
-            }
+            if (record->event.pressed) { register_code(KC_LALT); register_code(KC_LGUI); register_code(KC_LBRC); }
+            else { unregister_code(KC_LBRC); unregister_code(KC_LGUI); unregister_code(KC_LALT); }
             return false;
+
         case KC_OPTION_CMD_RBRACKET:
-            if (record->event.pressed) {
-                register_code(KC_LALT);
-                register_code(KC_LGUI);
-                register_code(KC_RBRC);
-            } else {
-                unregister_code(KC_RBRC);
-                unregister_code(KC_LGUI);
-                unregister_code(KC_LALT);
-            }
+            if (record->event.pressed) { register_code(KC_LALT); register_code(KC_LGUI); register_code(KC_RBRC); }
+            else { unregister_code(KC_RBRC); unregister_code(KC_LGUI); unregister_code(KC_LALT); }
             return false;
+
         case KC_C_S_RIGHT:
-            if (record->event.pressed) {
-                register_code(KC_LCTL);
-                register_code(KC_LSFT);
-                register_code(KC_RIGHT);
-            } else {
-                unregister_code(KC_RIGHT);
-                unregister_code(KC_LSFT);
-                unregister_code(KC_LCTL);
-            }
+            if (record->event.pressed) { register_code(KC_LCTL); register_code(KC_LSFT); register_code(KC_RIGHT); }
+            else { unregister_code(KC_RIGHT); unregister_code(KC_LSFT); unregister_code(KC_LCTL); }
             return false;
+
         case KC_CMD_SHIFT_BS:
-            if (record->event.pressed) {
-                register_code(KC_LGUI);
-                register_code(KC_LSFT);
-                register_code(KC_BSLS);
-            } else {
-                unregister_code(KC_BSLS);
-                unregister_code(KC_LSFT);
-                unregister_code(KC_LGUI);
-            }
+            if (record->event.pressed) { register_code(KC_LGUI); register_code(KC_LSFT); register_code(KC_BSLS); }
+            else { unregister_code(KC_BSLS); unregister_code(KC_LSFT); unregister_code(KC_LGUI); }
             return false;
+
         case KC_CMD_P:
-            if (record->event.pressed) {
-                register_code(KC_LGUI);
-                register_code(KC_P);
-            } else {
-                unregister_code(KC_P);
-                unregister_code(KC_LGUI);
-            }
+            if (record->event.pressed) { register_code(KC_LGUI); register_code(KC_P); }
+            else { unregister_code(KC_P); unregister_code(KC_LGUI); }
             return false;
+
         case KC_CMD_SHIFT_P:
-            if (record->event.pressed) {
-                register_code(KC_LGUI);
-                register_code(KC_LSFT);
-                register_code(KC_P);
-            } else {
-                unregister_code(KC_P);
-                unregister_code(KC_LSFT);
-                unregister_code(KC_LGUI);
-            }
+            if (record->event.pressed) { register_code(KC_LGUI); register_code(KC_LSFT); register_code(KC_P); }
+            else { unregister_code(KC_P); unregister_code(KC_LSFT); unregister_code(KC_LGUI); }
             return false;
+
         case KC_OPTION_CMD_SLSH:
-            if (record->event.pressed) {
-                register_code(KC_LALT);
-                register_code(KC_LGUI);
-                register_code(KC_SLSH);
-            } else {
-                unregister_code(KC_SLSH);
-                unregister_code(KC_LGUI);
-                unregister_code(KC_LALT);
-            }
+            if (record->event.pressed) { register_code(KC_LALT); register_code(KC_LGUI); register_code(KC_SLSH); }
+            else { unregister_code(KC_SLSH); unregister_code(KC_LGUI); unregister_code(KC_LALT); }
             return false;
+
+        /* new: Raycast & Magnet */
+        case RAYCAST:
+            if (record->event.pressed) tap_code16(LGUI(KC_SPC));  // Cmd+Space
+            return false;
+
+        case MG_LEFT:
+            if (record->event.pressed) tap_code16(LCTL(LALT(KC_LEFT)));  // Ctrl+Opt+Left
+            return false;
+
+        case MG_RIGHT:
+            if (record->event.pressed) tap_code16(LCTL(LALT(KC_RGHT)));  // Ctrl+Opt+Right
+            return false;
+
+        case MG_FULL:
+            if (record->event.pressed) tap_code16(LCTL(LALT(KC_F)));     // Ctrl+Opt+F
+            return false;
+
         default:
             return true;
     }
